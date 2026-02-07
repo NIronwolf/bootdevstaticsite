@@ -232,3 +232,7 @@ class TestInlineMarkdown(unittest.TestCase):
         ]
         nodes = text_to_textnodes(text)
         self.assertListEqual(expected_nodes, nodes)
+
+
+if __name__ == "__main__":
+    unittest.main()

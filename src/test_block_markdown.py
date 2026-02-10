@@ -1,6 +1,11 @@
 import unittest
 
-from block_markdown import markdown_to_blocks, block_to_block_type, BlockType
+from block_markdown import (
+    markdown_to_blocks,
+    block_to_block_type,
+    BlockType,
+    markdown_to_html_node,
+)
 
 
 class TestBlockMarkdown(unittest.TestCase):
@@ -97,6 +102,124 @@ This is the same paragraph on a new line
         # ordered list must not skip numbers
         block = "1. first\n3. skipped two"
         self.assertEqual(block_to_block_type(block), BlockType.PARAGRAPH)
+
+    def test_paragraphs(self):
+        md = """
+This is **bolded** paragraph
+text in a p
+tag here
+
+This is another paragraph with _italic_ text and `code` here
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
+        )
+
+    def test_codeblock(self):
+        md = """
+```
+This is text that _should_ remain
+the **same** even with inline stuff
+```
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
+        )
+
+    def test_heading(self):
+        md = """
+# Heading 1
+
+## Heading 2
+
+### Heading 3
+
+#### Heading 4
+
+##### Heading 5
+
+###### Heading 6
+
+# Heading 1 with **bold** and _italic_ text
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6><h1>Heading 1 with <b>bold</b> and <i>italic</i> text</h1></div>",
+        )
+
+    def test_quote(self):
+        md = """
+> This is a quote
+
+> This is a quote with **bold** and _italic_ text
+
+> This is a
+> multiline quote
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>This is a quote</blockquote><blockquote>This is a quote with <b>bold</b> and <i>italic</i> text</blockquote><blockquote>This is a multiline quote</blockquote></div>",
+        )
+
+    def test_unordered_list(self):
+        md = """
+- list item 1
+- list item 2 with **fancy** _text_
+
+- another list
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>list item 1</li><li>list item 2 with <b>fancy</b> <i>text</i></li></ul><ul><li>another list</li></ul></div>",
+        )
+
+    def test_ordered_list(self):
+        md = """
+1. ordered list
+
+1. Item 1
+2. Item 2 has `code`!
+"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ol><li>ordered list</li></ol><ol><li>Item 1</li><li>Item 2 has <code>code</code>!</li></ol></div>",
+        )
+
+    def test_paragraphs2(self):
+        md = """
+This is just a
+paragraph.
+
+This is another paragraph
+but with some **bold** and
+_italic_ and `code` text in it.
+"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><p>This is just a paragraph.</p><p>This is another paragraph but with some <b>bold</b> and <i>italic</i> and <code>code</code> text in it.</p></div>",
+        )
 
 
 if __name__ == "__main__":

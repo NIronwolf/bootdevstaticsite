@@ -1,1 +1,1 @@
-python3 src/main.py "https://nironwolf.github.io/bootdevstaticsite/"
+python3 src/main.py "https://nironwolf.github.io/bootdevstaticsite"

@@ -16,10 +16,10 @@ def generate_page(from_path, template_path, dest_path, basepath):
         template = f.read()
         f.close()
     html = template.replace("{{ Title }}", title).replace(
-        "{{ Content }}",
-        html_node.to_html()
-        .replace('href="/', f'href="{basepath}/')
-        .replace('src="/', f'src="{basepath}/'),
+        "{{ Content }}", html_node.to_html()
+    )
+    html = html.replace('href="/', f'href="{basepath}/').replace(
+        'src="/', f'src="{basepath}/'
     )
     dir = os.path.dirname(dest_path)
     os.makedirs(dir, exist_ok=True)

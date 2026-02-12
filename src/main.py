@@ -1,9 +1,8 @@
-from textnode import TextNode, TextType
+from copystatic import init_public
 
 
 def main():
-    node = TextNode("This is some acnhor text", TextType.LINK, "https://www.boot.dev")
-    print(node)
+    init_public()
 
 
 main()

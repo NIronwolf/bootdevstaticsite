@@ -23,9 +23,6 @@ def markdown_to_blocks(markdown: str):
     return blocks
 
 
-# ordered_list_counter = 1
-
-
 def block_to_block_type(block: str) -> BlockType:
     if re.findall(r"^(#{1,6}) ", block):
         return BlockType.HEADING
@@ -136,3 +133,11 @@ def quote_to_html_node(block: str) -> HTMLNode:
     lines = block.split("\n")
     quote = " ".join(line[1:].strip() for line in lines)
     return ParentNode("blockquote", text_to_children(quote))
+
+
+def extract_title(markdown: str) -> str:
+    lines = markdown.split("\n")
+    for line in lines:
+        if line.startswith("# "):
+            return line[2:]
+    raise ValueError("no title found")

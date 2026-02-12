@@ -2,14 +2,12 @@ import os
 import shutil
 
 
-def init_public():
-    public = "public"
-    static = "static"
-    dirs = [(static, public)]
-    if os.path.exists(public):
-        shutil.rmtree(public)
-    os.mkdir(public)
-    if os.path.exists(static):
+def init_public(src: str = "static", dst: str = "public"):
+    dirs = [(src, dst)]
+    if os.path.exists(dst):
+        shutil.rmtree(dst)
+    os.mkdir(dst)
+    if os.path.exists(src):
         while dirs:
             current_src, current_dst = dirs.pop()
             for entry in os.listdir(current_src):
